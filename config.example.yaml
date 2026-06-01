@@ -1,0 +1,80 @@
+# ============================================================
+#  Antigravity Backup — Configuración
+#  Edita este archivo antes de ejecutar el script.
+# ============================================================
+
+# ── Fuentes a respaldar ──────────────────────────────────────
+backup:
+  # Directorios a comprimir. Acepta rutas Windows y Linux.
+  directories:
+    - "/var/www/html"
+    # - "C:\\inetpub\\wwwroot"   # Ejemplo Windows
+
+  # Bases de datos MySQL/MariaDB (dejar vacío si no aplica)
+  mysql:
+    enabled: false
+    host: "localhost"
+    port: 3306
+    user: "root"
+    password: "secret"
+    databases:
+      - "mi_base_de_datos"
+    mysqldump_path: ""   # Dejar vacío para auto-detectar
+
+  # Bases de datos PostgreSQL (dejar vacío si no aplica)
+  postgresql:
+    enabled: false
+    host: "localhost"
+    port: 5432
+    user: "postgres"
+    password: "secret"
+    databases:
+      - "mi_base_de_datos"
+    pg_dump_path: ""     # Dejar vacío para auto-detectar
+
+# ── Almacenamiento local ─────────────────────────────────────
+storage:
+  local_backup_dir: "./backups"   # Donde se guardan los .tar.gz locales
+  retention_days: 7               # Borrar copias más antiguas de N días (0 = nunca)
+
+# ── Destino remoto: SSH/SFTP ─────────────────────────────────
+ssh:
+  enabled: false
+  host: "192.168.1.100"
+  port: 22
+  user: "backup_user"
+  # Usa clave privada O contraseña (no ambas)
+  private_key_path: "~/.ssh/id_rsa"
+  password: ""
+  remote_dir: "/backups/antigravity"
+
+# ── Destino remoto: AWS S3 ───────────────────────────────────
+s3:
+  enabled: false
+  bucket_name: "mi-bucket-backups"
+  prefix: "antigravity/"          # Carpeta virtual dentro del bucket
+  region: "eu-west-1"
+  # Credenciales: deja vacío para usar el perfil AWS CLI (~/.aws/credentials)
+  access_key_id: ""
+  secret_access_key: ""
+  storage_class: "STANDARD_IA"   # STANDARD | STANDARD_IA | GLACIER
+
+# ── Notificaciones por correo ────────────────────────────────
+notifications:
+  enabled: false
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+  smtp_user: "tu@email.com"
+  smtp_password: "app_password"
+  from_addr: "tu@email.com"
+  to_addrs:
+    - "admin@empresa.com"
+  notify_on_success: true
+  notify_on_failure: true
+
+# ── Logging ──────────────────────────────────────────────────
+logging:
+  log_file: "./logs/antigravity_backup.log"
+  log_level: "INFO"   # DEBUG | INFO | WARNING | ERROR
+  max_log_size_mb: 10
+  backup_count: 5     # Número de archivos de log a rotar
